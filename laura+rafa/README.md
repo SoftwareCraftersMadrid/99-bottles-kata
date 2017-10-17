@@ -1,0 +1,1 @@
+Hemos dejado dos commits. El primero con la solución loca que hicimos al final porque nos sobró tiempo valorando mucho el explotar conceptos y el tener clases pequeñas y el otro con la solución más obvia siendo muy production-like.
