@@ -25,7 +25,7 @@ Go to the store and buy some more, 99 bottles of beer on the wall."
     expect(BeerSong.new.verse(0)).to eq(expected)
   end
 
-  it 'prints a verse for 99 and 98 bottles correctly' do
+  it 'prints a verse for 99 bottles correctly' do
     expected = "99 bottles of beer on the wall, 99 bottles of beer.
 Take one down and pass it around, 98 bottles of beer on the wall.
 
@@ -34,7 +34,7 @@ Take one down and pass it around, 97 bottles of beer on the wall."
     expect(BeerSong.new.verses(99,98)).to eq(expected)
   end
 
-  it 'prints a verse for all bottles correctly' do
+  it 'prints a verse for 99 bottles correctly' do
     expected = "99 bottles of beer on the wall, 99 bottles of beer.
 Take one down and pass it around, 98 bottles of beer on the wall.
 
@@ -346,7 +346,7 @@ class BeerSong
   end
 
   def verse(bottles)
-    Heineken.build(bottles).to_s
+    BeerVerse.new.verse(bottles)
   end
 end
 
@@ -354,67 +354,22 @@ class BeerVerse
   def verse(bottles)
     first_sentence(bottles) + second_sentence(bottles)
   end
-end
 
-class Sentence
-  def initialize(bottles)
-    @bottles = bottles
+  private
+
+  def first_sentence(bottles)
+    "#{describe_count(bottles).capitalize} of beer on the wall, #{describe_count(bottles)} of beer.\n"
   end
 
-  def to_s
-    first_verse + second_verse
-  end
-
-  protected
-
-  def first_verse
-    "#{BottleCount.new(@bottles).capitalize} of beer on the wall, #{BottleCount.new(@bottles)} of beer.\n"
-  end
-
-end
-
-class ManyBottles < Sentence
-  def second_verse
-     "Take one down and pass it around, #{BottleCount.new(@bottles - 1)} of beer on the wall."
-  end
-end
-
-class OneBottles < Sentence
-  def second_verse
-    "Take it down and pass it around, #{BottleCount.new(@bottles - 1)} of beer on the wall."
-  end
-end
-
-class NoMoreBottles < Sentence
-  def second_verse
+  def second_sentence(bottles)
+    return "Take one down and pass it around, #{describe_count(bottles - 1)} of beer on the wall." if bottles > 1
+    return "Take it down and pass it around, #{describe_count(bottles - 1)} of beer on the wall." if bottles == 1
     "Go to the store and buy some more, 99 bottles of beer on the wall."
   end
-end
 
-class Heineken
-  def self.build(bottles)
-    if bottles > 1
-      ManyBottles.new(bottles)
-    elsif bottles == 1
-      OneBottles.new(bottles)
-    else
-      NoMoreBottles.new(bottles)
-    end
-  end
-end
-
-class BottleCount
-  def initialize(bottles)
-    @bottles = bottles
-  end
-
-  def to_s
-    return "#{@bottles} bottles" if @bottles > 1
-    return "#{@bottles} bottle" if @bottles == 1
+  def describe_count(bottles)
+    return "#{bottles} bottles" if bottles > 1
+    return "#{bottles} bottle" if bottles == 1
     "no more bottles"
-  end
-
-  def capitalize
-    to_s.capitalize
   end
 end
